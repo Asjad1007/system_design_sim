@@ -7,6 +7,7 @@ import {
     Database,
     HardDrive,
     MessageSquare,
+    Settings,
 } from 'lucide-react';
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -46,13 +47,19 @@ function SimNodeComponent({ data, selected }: NodeProps<SimNodeType>) {
             />
             <div
                 className={`
-          relative px-4 py-3 rounded-2xl border-2 backdrop-blur-xl
-          min-w-[160px]
+          group/node relative px-4 py-3 rounded-2xl border-2 backdrop-blur-xl
+          min-w-[160px] cursor-pointer
           transition-all duration-300
           ${healthStyle}
           ${selected ? 'ring-2 ring-accent/50 border-accent' : 'border-slate-200'}
         `}
             >
+                {/* Config hint — visible on hover */}
+                <div className="absolute top-1.5 right-1.5 opacity-0 group-hover/node:opacity-100 transition-opacity duration-200">
+                    <div className="p-1 rounded-md bg-slate-100/80 text-slate-400 hover:text-accent hover:bg-accent/10 transition-colors">
+                        <Settings size={12} />
+                    </div>
+                </div>
                 {/* Icon + Label */}
                 <div className="flex items-center gap-3">
                     <div className={`p-2 rounded-xl transition-colors duration-300 ${iconStyle}`}>
