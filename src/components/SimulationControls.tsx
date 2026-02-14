@@ -17,7 +17,7 @@ export default function SimulationControls() {
 
     return (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-            <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-xl px-6 py-4 flex items-center gap-4">
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-lg px-6 py-4 flex items-center gap-4">
                 {/* Request Count */}
                 <div className="flex items-center gap-2">
                     <Zap size={14} className="text-accent" />
@@ -56,7 +56,7 @@ export default function SimulationControls() {
                     <button
                         onClick={startSimulation}
                         disabled={nodes.length === 0}
-                        className="flex items-center gap-2 px-5 py-2 rounded-xl bg-accent hover:bg-accent-dark text-white text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-accent/20 disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="flex items-center gap-2 px-5 py-2 rounded-xl bg-accent hover:bg-accent-dark text-white text-sm font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-accent/25 disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                         <Play size={14} />
                         Start Simulation

@@ -117,8 +117,8 @@ function CanvasContent() {
                 <Background
                     variant={BackgroundVariant.Cross}
                     gap={24}
-                    size={2}
-                    color="#cbd5e1"
+                    size={1.5}
+                    color="#94a3b8"
                 />
                 <Controls
                     className="!bg-white !border-slate-200 !rounded-xl !shadow-lg [&>button]:!bg-white [&>button]:!border-slate-200 [&>button]:!text-slate-600 [&>button:hover]:!bg-slate-50"

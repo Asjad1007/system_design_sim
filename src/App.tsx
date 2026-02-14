@@ -7,14 +7,14 @@ import { Cpu } from 'lucide-react';
 
 export default function App() {
   return (
-    <div className="w-screen h-screen flex flex-col bg-slate-50">
-      {/* Top Bar */}
-      <header className="h-11 bg-white border-b border-slate-200/80 flex items-center px-4 gap-2.5 shrink-0 relative z-50">
-        <div className="flex items-center gap-2">
-          <div className="p-1 rounded-md bg-accent/10">
-            <Cpu size={14} className="text-accent" />
+    <div className="w-screen h-screen flex flex-col bg-slate-100">
+      {/* Top Bar — clean white with indigo accent line */}
+      <header className="h-12 bg-white flex items-center px-5 gap-3 shrink-0 relative z-50 shadow-sm border-b border-slate-200">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1.5 rounded-lg bg-accent text-white">
+            <Cpu size={15} />
           </div>
-          <h1 className="text-[13px] font-semibold text-slate-800 tracking-tight">
+          <h1 className="text-sm font-bold text-slate-800 tracking-tight">
             System Design Simulator
           </h1>
         </div>

@@ -13,7 +13,8 @@
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #f8fafc;
+    background-color: #f1f5f9;
+    /* slate-100 — slightly darker base */
     color: #0f172a;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
@@ -27,7 +28,7 @@
     height: 100vh;
   }
 
-  /* Scrollbar styling — light theme */
+  /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -37,24 +38,24 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.12);
+    background: #cbd5e1;
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: #94a3b8;
   }
 }
 
 @layer components {
 
   /* ══════════════════════════════════════════════════════════
-     React Flow — FORCE white/light canvas background
-     The library ships its own bg; we override with !important
+     React Flow — Canvas uses a slightly tinted background
+     so nodes (white) pop visually
      ══════════════════════════════════════════════════════════ */
   .react-flow {
-    background-color: #f8fafc !important;
-    /* slate-50 */
+    background-color: #f1f5f9 !important;
+    /* slate-100 */
   }
 
   .react-flow__renderer,
@@ -110,12 +111,12 @@
     overflow: hidden;
   }
 
-  /* Controls overrides for light theme */
+  /* Controls */
   .react-flow__controls {
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
     border-radius: 12px !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
   }
 
   .react-flow__controls button {
@@ -144,9 +145,11 @@
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 input[type='number'] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }

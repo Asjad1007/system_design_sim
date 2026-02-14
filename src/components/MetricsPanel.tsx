@@ -22,7 +22,7 @@ import { useState } from 'react';
 export default function MetricsPanel() {
     const simulationState = useSimStore((s) => s.simulationState);
     const simulationResult = useSimStore((s) => s.simulationResult);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     if (simulationState !== 'complete' || !simulationResult) return null;
 

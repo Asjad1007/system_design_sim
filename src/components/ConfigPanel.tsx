@@ -10,6 +10,7 @@ import type {
 } from '../types';
 import { X, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 export default function ConfigPanel() {
     const nodes = useSimStore((s) => s.nodes);
@@ -29,10 +30,10 @@ export default function ConfigPanel() {
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: 320, opacity: 0 }}
                     transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-                    className="w-80 bg-white/90 backdrop-blur-xl border-l border-slate-200 flex flex-col overflow-y-auto shadow-xl"
+                    className="w-80 bg-white backdrop-blur-xl border-l border-slate-200 flex flex-col overflow-y-auto shadow-lg"
                 >
                     {/* Header */}
-                    <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+                    <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
                         <h3 className="text-sm font-semibold text-slate-800">
                             Configure: {selectedNode.data.label}
                         </h3>
@@ -118,6 +119,60 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 const INPUT_CLASS =
     'w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all disabled:opacity-50 disabled:bg-slate-50 shadow-sm';
 
+// ─── NumberInput — allows clearing the field to retype ──────
+function NumberInput({
+    value,
+    onValueChange,
+    disabled,
+    min,
+    max,
+    step,
+    className,
+    placeholder,
+}: {
+    value: number;
+    onValueChange: (v: number) => void;
+    disabled?: boolean;
+    min?: number;
+    max?: number;
+    step?: number;
+    className?: string;
+    placeholder?: string;
+}) {
+    const [localValue, setLocalValue] = useState(String(value));
+
+    useEffect(() => {
+        setLocalValue(String(value));
+    }, [value]);
+
+    return (
+        <input
+            type="number"
+            className={className ?? INPUT_CLASS}
+            value={localValue}
+            onChange={(e) => {
+                setLocalValue(e.target.value);
+                const num = Number(e.target.value);
+                if (e.target.value !== '' && !isNaN(num)) {
+                    onValueChange(num);
+                }
+            }}
+            onBlur={() => {
+                if (localValue === '' || isNaN(Number(localValue))) {
+                    const fallback = min ?? 0;
+                    setLocalValue(String(fallback));
+                    onValueChange(fallback);
+                }
+            }}
+            disabled={disabled}
+            min={min}
+            max={max}
+            step={step}
+            placeholder={placeholder}
+        />
+    );
+}
+
 const SELECT_CLASS =
     'w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/10 appearance-none disabled:opacity-50 disabled:bg-slate-50 shadow-sm';
 
@@ -173,11 +228,9 @@ function LBForm({
                 </select>
             </Field>
             <Field label="Max Connections/Sec">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.maxConnectionsPerSecond}
-                    onChange={(e) => onChange({ ...config, maxConnectionsPerSecond: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, maxConnectionsPerSecond: v })}
                     disabled={disabled}
                     min={100}
                     step={100}
@@ -208,55 +261,45 @@ function AppServerForm({
     return (
         <div className="space-y-4">
             <Field label="Instances">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.instances}
-                    onChange={(e) => onChange({ ...config, instances: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, instances: v })}
                     disabled={disabled}
                     min={1}
                     max={100}
                 />
             </Field>
             <Field label="CPU Cores (per instance)">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.cpuCores}
-                    onChange={(e) => onChange({ ...config, cpuCores: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, cpuCores: v })}
                     disabled={disabled}
                     min={1}
                     max={64}
                 />
             </Field>
             <Field label="Memory (MB)">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.memoryMb}
-                    onChange={(e) => onChange({ ...config, memoryMb: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, memoryMb: v })}
                     disabled={disabled}
                     min={256}
                     step={256}
                 />
             </Field>
             <Field label="Max Concurrent Requests (per instance)">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.maxConcurrentRequests}
-                    onChange={(e) => onChange({ ...config, maxConcurrentRequests: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, maxConcurrentRequests: v })}
                     disabled={disabled}
                     min={10}
                     step={10}
                 />
             </Field>
             <Field label="Processing Time (ms)">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.processingTimeMs}
-                    onChange={(e) => onChange({ ...config, processingTimeMs: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, processingTimeMs: v })}
                     disabled={disabled}
                     min={1}
                     max={5000}
@@ -310,11 +353,10 @@ function DBForm({
                         disabled={disabled}
                     />
                     {config.sharding && (
-                        <input
-                            type="number"
+                        <NumberInput
                             className={`${INPUT_CLASS} w-20`}
                             value={config.shardCount}
-                            onChange={(e) => onChange({ ...config, shardCount: Number(e.target.value) })}
+                            onValueChange={(v) => onChange({ ...config, shardCount: v })}
                             disabled={disabled}
                             min={2}
                             max={64}
@@ -337,11 +379,9 @@ function DBForm({
             </Field>
             {config.replication !== 'none' && (
                 <Field label="Replica Count">
-                    <input
-                        type="number"
-                        className={INPUT_CLASS}
+                    <NumberInput
                         value={config.replicaCount}
-                        onChange={(e) => onChange({ ...config, replicaCount: Number(e.target.value) })}
+                        onValueChange={(v) => onChange({ ...config, replicaCount: v })}
                         disabled={disabled}
                         min={1}
                         max={10}
@@ -349,22 +389,18 @@ function DBForm({
                 </Field>
             )}
             <Field label="Max Connection Pool">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.maxConnectionPool}
-                    onChange={(e) => onChange({ ...config, maxConnectionPool: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, maxConnectionPool: v })}
                     disabled={disabled}
                     min={10}
                     step={10}
                 />
             </Field>
             <Field label="Base Query Time (ms)">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.baseQueryTimeMs}
-                    onChange={(e) => onChange({ ...config, baseQueryTimeMs: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, baseQueryTimeMs: v })}
                     disabled={disabled}
                     min={1}
                     max={1000}
@@ -400,22 +436,18 @@ function CacheForm({
                 </select>
             </Field>
             <Field label="Max Memory (MB)">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.maxMemoryMb}
-                    onChange={(e) => onChange({ ...config, maxMemoryMb: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, maxMemoryMb: v })}
                     disabled={disabled}
                     min={64}
                     step={64}
                 />
             </Field>
             <Field label="TTL (seconds)">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.ttlSeconds}
-                    onChange={(e) => onChange({ ...config, ttlSeconds: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, ttlSeconds: v })}
                     disabled={disabled}
                     min={1}
                 />
@@ -437,11 +469,9 @@ function CacheForm({
                 </div>
             </Field>
             <Field label="Max Ops/Sec">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.maxOpsPerSecond}
-                    onChange={(e) => onChange({ ...config, maxOpsPerSecond: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, maxOpsPerSecond: v })}
                     disabled={disabled}
                     min={100}
                     step={100}
@@ -465,22 +495,18 @@ function MQForm({
     return (
         <div className="space-y-4">
             <Field label="Max Queue Depth">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.maxQueueDepth}
-                    onChange={(e) => onChange({ ...config, maxQueueDepth: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, maxQueueDepth: v })}
                     disabled={disabled}
                     min={100}
                     step={100}
                 />
             </Field>
             <Field label="Processing Rate/Sec">
-                <input
-                    type="number"
-                    className={INPUT_CLASS}
+                <NumberInput
                     value={config.processingRatePerSecond}
-                    onChange={(e) => onChange({ ...config, processingRatePerSecond: Number(e.target.value) })}
+                    onValueChange={(v) => onChange({ ...config, processingRatePerSecond: v })}
                     disabled={disabled}
                     min={10}
                     step={10}
@@ -500,11 +526,9 @@ function MQForm({
             </Field>
             {config.retryPolicy !== 'none' && (
                 <Field label="Max Retries">
-                    <input
-                        type="number"
-                        className={INPUT_CLASS}
+                    <NumberInput
                         value={config.maxRetries}
-                        onChange={(e) => onChange({ ...config, maxRetries: Number(e.target.value) })}
+                        onValueChange={(v) => onChange({ ...config, maxRetries: v })}
                         disabled={disabled}
                         min={1}
                         max={10}
