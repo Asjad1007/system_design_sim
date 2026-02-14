@@ -9,13 +9,12 @@ import {
     MessageSquare,
 } from 'lucide-react';
 
-// Each component type gets its OWN color for instant recognition
 const COMPONENT_ITEMS: {
     type: ComponentType;
     icon: React.ReactNode;
-    color: string;       // icon text color
-    bg: string;          // icon bg
-    hoverBorder: string; // card hover border
+    color: string;
+    bg: string;
+    hoverBorder: string;
 }[] = [
         {
             type: 'loadBalancer',
