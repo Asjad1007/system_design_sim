@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react';
 import type { SimNodeData, HealthState, ComponentType } from '../../types';
+import { useSimStore } from '../../store/useSimStore';
 import {
     Network,
     Server,
@@ -8,6 +9,7 @@ import {
     HardDrive,
     MessageSquare,
     Settings,
+    Trash2,
 } from 'lucide-react';
 
 // Color-coded icons per component type
@@ -35,9 +37,11 @@ const HEALTH_DOT: Record<HealthState, string> = {
 
 type SimNodeType = Node<SimNodeData, 'simNode'>;
 
-function SimNodeComponent({ data, selected }: NodeProps<SimNodeType>) {
+function SimNodeComponent({ data, selected, id }: NodeProps<SimNodeType>) {
     const healthStyle = HEALTH_STYLES[data.health];
     const comp = COMPONENT_COLORS[data.componentType];
+    const selectNode = useSimStore((s) => s.selectNode);
+    const removeNode = useSimStore((s) => s.removeNode);
 
     return (
         <>
@@ -55,11 +59,28 @@ function SimNodeComponent({ data, selected }: NodeProps<SimNodeType>) {
           ${selected ? 'ring-2 ring-accent/40 border-accent' : 'border-slate-200'}
         `}
             >
-                {/* Config hint — visible on hover */}
-                <div className="absolute top-1.5 right-1.5 opacity-0 group-hover/node:opacity-100 transition-opacity duration-200">
-                    <div className="p-1 rounded-md bg-slate-100 text-slate-400 hover:text-accent hover:bg-accent/10 transition-colors">
+                {/* Action buttons — float above the top-right corner, visible on hover */}
+                <div className="absolute -top-4 -right-2 flex gap-1 opacity-0 group-hover/node:opacity-100 transition-opacity duration-200 z-10">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            selectNode(id);
+                        }}
+                        className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-accent hover:border-accent/40 shadow-sm transition-colors"
+                        title="Configure"
+                    >
                         <Settings size={12} />
-                    </div>
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            removeNode(id);
+                        }}
+                        className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-300 shadow-sm transition-colors"
+                        title="Delete"
+                    >
+                        <Trash2 size={12} />
+                    </button>
                 </div>
 
                 {/* Icon + Label */}

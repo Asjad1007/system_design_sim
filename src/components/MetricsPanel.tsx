@@ -17,12 +17,19 @@ import {
     X,
     BarChart3,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function MetricsPanel() {
     const simulationState = useSimStore((s) => s.simulationState);
     const simulationResult = useSimStore((s) => s.simulationResult);
     const [isOpen, setIsOpen] = useState(true);
+
+    // Auto-open every time a simulation completes (not just the first time)
+    useEffect(() => {
+        if (simulationState === 'complete') {
+            setIsOpen(true);
+        }
+    }, [simulationState]);
 
     if (simulationState !== 'complete' || !simulationResult) return null;
 
