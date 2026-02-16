@@ -3,6 +3,7 @@ import Canvas from './components/Canvas';
 import ConfigPanel from './components/ConfigPanel';
 import SimulationControls from './components/SimulationControls';
 import MetricsPanel from './components/MetricsPanel';
+import BuilderBadge from './components/BuilderBadge';
 import { Cpu } from 'lucide-react';
 
 export default function App() {
@@ -18,6 +19,8 @@ export default function App() {
             System Design Simulator
           </h1>
         </div>
+        <div className="flex-1" />
+        <BuilderBadge />
       </header>
 
       {/* Main Content */}
