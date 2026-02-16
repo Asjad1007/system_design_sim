@@ -5,6 +5,7 @@ import SimulationControls from './components/SimulationControls';
 import MetricsPanel from './components/MetricsPanel';
 import BuilderBadge from './components/BuilderBadge';
 import { Cpu } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
         </div>
         <ConfigPanel />
       </div>
+      <Analytics />
     </div>
   );
 }
